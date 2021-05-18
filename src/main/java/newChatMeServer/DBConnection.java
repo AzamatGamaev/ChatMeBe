@@ -3,12 +3,12 @@ package newChatMeServer;
 
 import java.sql.*;
 
+//lesson2 - класс где прописаны методы
 public class DBConnection {
-    public static String login;
-    public static String pass;
-    public static String nick;
-    public static String userID;
-    public static int count = DBConnection.numberOfRows();
+    private static String pass;
+    private static String nick;
+    private static String userID;
+    private static int count = DBConnection.numberOfRows();
 
     public static String getPassFromDB(String login) {
         try (
@@ -21,7 +21,7 @@ public class DBConnection {
             }
         } catch (
                 SQLException e) {
-           e.printStackTrace();
+            e.printStackTrace();
             System.out.println("Проблема с getPassFromDB");
         }
         return pass;
@@ -87,7 +87,7 @@ public class DBConnection {
             e.printStackTrace();
             System.out.println("Проблема с numberOfRows");
         }
-        System.out.println(count);
+        System.out.println("Количество юзеров в базе = " + count);
         return count;
     }
 
@@ -113,6 +113,48 @@ public class DBConnection {
             System.out.println("Проблема с getAll");
         }
         return arr;
+    }
+
+    public static int getCount() {
+        return count;
+    }
+
+    public static void setCount(int count) {
+        DBConnection.count = count;
+    }
+
+    private static String login;
+
+    public static String getLogin() {
+        return login;
+    }
+
+    public static void setLogin(String login) {
+        DBConnection.login = login;
+    }
+
+    public static String getPass() {
+        return pass;
+    }
+
+    public static void setPass(String pass) {
+        DBConnection.pass = pass;
+    }
+
+    public static String getNick() {
+        return nick;
+    }
+
+    public static void setNick(String nick) {
+        DBConnection.nick = nick;
+    }
+
+    public static String getUserID() {
+        return userID;
+    }
+
+    public static void setUserID(String userID) {
+        DBConnection.userID = userID;
     }
 }
 
