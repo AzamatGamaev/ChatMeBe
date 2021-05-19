@@ -1,16 +1,15 @@
 package newChatMeServer;
 
-
 import java.sql.*;
 
 //lesson2 - класс где прописаны методы
 public class DBConnection {
-    private static String pass;
-    private static String nick;
-    private static String userID;
-    private static int count = DBConnection.numberOfRows();
+    private String userID;
+    private String pass;
+    private String nick;
+    private static final int count = DBConnection.numberOfRows();
 
-    public static String getPassFromDB(String login) {
+    public String getPassFromDB(String login) {
         try (
                 Connection postgresConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chatMeDB", "postgres", "12345")) {
             PreparedStatement loginPrepareStatement = postgresConnection.prepareStatement("select * from users where login = ?");
@@ -27,7 +26,7 @@ public class DBConnection {
         return pass;
     }
 
-    public static String getNickFromDB(String login) {
+    public String getNickFromDB(String login) {
         try (
                 Connection postgresConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chatMeDB", "postgres", "12345")) {
             PreparedStatement loginPrepareStatement = postgresConnection.prepareStatement("select * from users where login = ?");
@@ -44,7 +43,7 @@ public class DBConnection {
         return nick;
     }
 
-    public static String getUserIDFromDB(String nick) {
+    public String getUserIDFromDB(String nick) {
         try (
                 Connection postgresConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chatMeDB", "postgres", "12345")) {
             PreparedStatement loginPrepareStatement = postgresConnection.prepareStatement("select * from users where nick=?");
@@ -61,7 +60,7 @@ public class DBConnection {
         return userID;
     }
 
-    public static int updateNick(int id, String newNick) {
+    int updateNick(int id, String newNick) {
         int affectedDraws = 0;
         try (Connection postgresConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chatMeDB", "postgres", "12345")) {
             PreparedStatement idPrepareStatement = postgresConnection.prepareStatement("update users SET nick = ? where user_id = ?");
@@ -76,7 +75,7 @@ public class DBConnection {
         return affectedDraws;
     }
 
-    public static int numberOfRows() {
+    private static int numberOfRows() {
         int count = 0;
         try (Connection postgresConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chatMeDB", "postgres", "12345")) {
             PreparedStatement idPrepareStatement = postgresConnection.prepareStatement("select count(*) from users");
@@ -91,7 +90,7 @@ public class DBConnection {
         return count;
     }
 
-    public static String[] getAll(int count) {
+    public String[] getAll(int count) {
         String[] arr = new String[3];
         try (
                 Connection postgresConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chatMeDB", "postgres", "12345")) {
@@ -100,7 +99,7 @@ public class DBConnection {
             loginPrepareStatement.setInt(1, count);
             ResultSet userResultSet = loginPrepareStatement.executeQuery();
             while (userResultSet.next()) {
-                login = userResultSet.getString("login");
+                String login = userResultSet.getString("login");
                 pass = userResultSet.getString("password");
                 nick = userResultSet.getString("nick");
                 arr[0] = login;
@@ -115,46 +114,20 @@ public class DBConnection {
         return arr;
     }
 
-    public static int getCount() {
-        return count;
-    }
-
-    public static void setCount(int count) {
-        DBConnection.count = count;
-    }
-
-    private static String login;
-
-    public static String getLogin() {
-        return login;
-    }
-
-    public static void setLogin(String login) {
-        DBConnection.login = login;
-    }
-
-    public static String getPass() {
+    public String getPass() {
         return pass;
     }
 
-    public static void setPass(String pass) {
-        DBConnection.pass = pass;
-    }
-
-    public static String getNick() {
+    public String getNick() {
         return nick;
     }
 
-    public static void setNick(String nick) {
-        DBConnection.nick = nick;
-    }
-
-    public static String getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public static void setUserID(String userID) {
-        DBConnection.userID = userID;
+    public static int getCount() {
+        return count;
     }
 }
 
