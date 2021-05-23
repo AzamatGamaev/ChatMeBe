@@ -9,11 +9,13 @@ public class BaseAuthService implements AuthService {
 
     @Override
     public void start() {
+        DBConnection dbConnection = new DBConnection();
         users = new HashMap<>();
-        for (int i = 1; i <= DBConnection.count; i++) {
-            String[] arr = DBConnection.getAll(i);
+        for (int i = 1; i <= DBConnection.getCount(); i++) {
+            String[] arr = dbConnection.getAll(i);
             users.put(arr[0], new User(arr[0], arr[1], arr[2]));
         }
+        System.out.println("В базе обнаружены пользователи со следующими никами:");
         System.out.println(getNickByLoginPass("login1","pass1"));
         System.out.println(getNickByLoginPass("login2","pass2"));
         System.out.println(getNickByLoginPass("login3","pass3"));

@@ -1,16 +1,15 @@
 package newChatMeServer;
 
-
 import java.sql.*;
 
+//lesson2 - класс где прописаны методы
 public class DBConnection {
-    public static String login;
-    public static String pass;
-    public static String nick;
-    public static String userID;
-    public static int count = DBConnection.numberOfRows();
+    private String userID;
+    private String pass;
+    private String nick;
+    private static final int count = DBConnection.numberOfRows();
 
-    public static String getPassFromDB(String login) {
+    public String getPassFromDB(String login) {
         try (
                 Connection postgresConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chatMeDB", "postgres", "12345")) {
             PreparedStatement loginPrepareStatement = postgresConnection.prepareStatement("select * from users where login = ?");
@@ -21,13 +20,13 @@ public class DBConnection {
             }
         } catch (
                 SQLException e) {
-           e.printStackTrace();
+            e.printStackTrace();
             System.out.println("Проблема с getPassFromDB");
         }
         return pass;
     }
 
-    public static String getNickFromDB(String login) {
+    public String getNickFromDB(String login) {
         try (
                 Connection postgresConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chatMeDB", "postgres", "12345")) {
             PreparedStatement loginPrepareStatement = postgresConnection.prepareStatement("select * from users where login = ?");
@@ -44,7 +43,7 @@ public class DBConnection {
         return nick;
     }
 
-    public static String getUserIDFromDB(String nick) {
+    public String getUserIDFromDB(String nick) {
         try (
                 Connection postgresConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chatMeDB", "postgres", "12345")) {
             PreparedStatement loginPrepareStatement = postgresConnection.prepareStatement("select * from users where nick=?");
@@ -61,7 +60,7 @@ public class DBConnection {
         return userID;
     }
 
-    public static int updateNick(int id, String newNick) {
+    int updateNick(int id, String newNick) {
         int affectedDraws = 0;
         try (Connection postgresConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chatMeDB", "postgres", "12345")) {
             PreparedStatement idPrepareStatement = postgresConnection.prepareStatement("update users SET nick = ? where user_id = ?");
@@ -76,7 +75,7 @@ public class DBConnection {
         return affectedDraws;
     }
 
-    public static int numberOfRows() {
+    private static int numberOfRows() {
         int count = 0;
         try (Connection postgresConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chatMeDB", "postgres", "12345")) {
             PreparedStatement idPrepareStatement = postgresConnection.prepareStatement("select count(*) from users");
@@ -87,11 +86,11 @@ public class DBConnection {
             e.printStackTrace();
             System.out.println("Проблема с numberOfRows");
         }
-        System.out.println(count);
+        System.out.println("Количество юзеров в базе = " + count);
         return count;
     }
 
-    public static String[] getAll(int count) {
+    public String[] getAll(int count) {
         String[] arr = new String[3];
         try (
                 Connection postgresConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chatMeDB", "postgres", "12345")) {
@@ -100,7 +99,7 @@ public class DBConnection {
             loginPrepareStatement.setInt(1, count);
             ResultSet userResultSet = loginPrepareStatement.executeQuery();
             while (userResultSet.next()) {
-                login = userResultSet.getString("login");
+                String login = userResultSet.getString("login");
                 pass = userResultSet.getString("password");
                 nick = userResultSet.getString("nick");
                 arr[0] = login;
@@ -113,6 +112,22 @@ public class DBConnection {
             System.out.println("Проблема с getAll");
         }
         return arr;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public String getNick() {
+        return nick;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public static int getCount() {
+        return count;
     }
 }
 

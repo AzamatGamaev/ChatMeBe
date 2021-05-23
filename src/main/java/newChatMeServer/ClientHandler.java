@@ -84,6 +84,7 @@ public class ClientHandler {
     public void readMsg() throws IOException {
         while (socket.isConnected()) {
             String strFromClient = in.readUTF();
+            DBConnection dbConnection = new DBConnection();
 
             if (lastMsgTime != null && System.currentTimeMillis() - lastMsgTime < 5000) {
                 server.sendSystemMsgToClient("ВНИМАНИЕ! Время между отправкой сообщений 5 секунд.");
@@ -104,7 +105,7 @@ public class ClientHandler {
                             "Вам нужно узнать ваш уникальный id. Для этого введите /getMyID .");
                 }
                 if (strFromClient.startsWith("/getMyID")) {
-                    server.sendSystemMsgToClient("Ваш id = " + DBConnection.getUserIDFromDB(name) + "." +
+                    server.sendSystemMsgToClient("Ваш id = " + dbConnection.getUserIDFromDB(name) + "." +
                             "Для смены ника введите /setMyNick вашID новыйНик");
                 }
                 if (strFromClient.startsWith("/setMyNick")) {
@@ -112,7 +113,8 @@ public class ClientHandler {
                         String[] parts = strFromClient.split(" ");
                         int id = Integer.parseInt(parts[1]);
                         String newNick = parts[2];
-                        DBConnection.updateNick(id, newNick);
+
+                        dbConnection.updateNick(id, newNick);
                         server.sendSystemMsgToClient("Вы успешно изменили свой ник.");
                     } catch (Exception e) {
                         server.sendSystemMsgToClientAboutCommand(strFromClient, " Неправильная команда. " +
